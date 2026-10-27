@@ -12,6 +12,8 @@ const std::string DIRECTION_RIGHT = "RIGHT";
 const std::string DIRECTION_UP = "UP";
 const std::string DIRECTION_DOWN = "DOWN";
 
+bool isPaused = false;
+
 char pressedKeyInLowerCase = 'a';
 std::string currentDirection = DIRECTION_LEFT;
 
@@ -141,6 +143,13 @@ void enableRawMode() {
 }
 
 void gameLoop() {
+    if(isPaused) {
+        usleep(SLEEP_MICROSECONDS_ANIMATION_TIME);
+
+        gameLoop();
+
+        return;
+    }
     if(pressedKeyInLowerCase == 'a' && currentDirection != DIRECTION_RIGHT) {
         // left
         sneakGoLeft();
@@ -316,7 +325,16 @@ void readKeywordFromConsole() {
         char tmp = std::tolower((keyword));
 
         if(tmp == 'a' || tmp == 'd' || tmp == 's' || tmp == 'w') {
-            pressedKeyInLowerCase = std::tolower((keyword));
+            pressedKeyInLowerCase = tmp;
+        } else if(tmp == 'p') {
+            isPaused = !isPaused;
+
+            if(isPaused) {
+                std::cout << std::endl;
+                std::cout << "Paused" << std::endl;
+            } else {
+                system("clear");
+            }
         }
     }
 }
