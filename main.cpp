@@ -1,5 +1,4 @@
 #include <cctype>
-#include <chrono>
 #include <cstdlib>
 #include <iostream>
 #include <thread>
@@ -11,7 +10,7 @@
 char pressedKeyInLowerCase = 'a';
 char prevPressedKeyInLowerCase;
 
-const int SLEEP_MICROSECONDS_ANIMATION_TIME = 10000;
+const int SLEEP_MICROSECONDS_ANIMATION_TIME = 100000;
 const double SNEAK_STEP = 1;
 
 const int boardRows = 30;
