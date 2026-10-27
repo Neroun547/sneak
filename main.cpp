@@ -7,8 +7,13 @@
 #include "doubleLinkedList.h"
 #include <clocale>
 
+const std::string DIRECTION_LEFT = "LEFT";
+const std::string DIRECTION_RIGHT = "RIGHT";
+const std::string DIRECTION_UP = "UP";
+const std::string DIRECTION_DOWN = "DOWN";
+
 char pressedKeyInLowerCase = 'a';
-char prevPressedKeyInLowerCase;
+std::string currentDirection = DIRECTION_LEFT;
 
 const int SLEEP_MICROSECONDS_ANIMATION_TIME = 100000;
 const double SNEAK_STEP = 1;
@@ -136,55 +141,52 @@ void enableRawMode() {
 }
 
 void gameLoop() {
-    if(pressedKeyInLowerCase == 'a' && prevPressedKeyInLowerCase != 'd') {
+    if(pressedKeyInLowerCase == 'a' && currentDirection != DIRECTION_RIGHT) {
         // left
         sneakGoLeft();
+        currentDirection = DIRECTION_LEFT;
         changeSneakDirectionSideEffects();
         gameLoop();
-    } else if(pressedKeyInLowerCase == 'a' && prevPressedKeyInLowerCase == 'd') {
-        // right
-        sneakGoRight();
-        sneakReachTarget();
-        system("clear");
-        drawBoard();
-        drawScoreCount();
-        usleep(SLEEP_MICROSECONDS_ANIMATION_TIME);
-        gameLoop();
-    }
-
-    if(pressedKeyInLowerCase == 'w' && prevPressedKeyInLowerCase != 's') {
+    } else if(pressedKeyInLowerCase == 'w' && currentDirection != DIRECTION_DOWN) {
         // up
         sneakGoUp();
+        currentDirection = DIRECTION_UP;
         changeSneakDirectionSideEffects();
         gameLoop();
-    } else if(pressedKeyInLowerCase == 'w' && prevPressedKeyInLowerCase == 's') {
-        // down
-        sneakGoDown();
-        changeSneakDirectionSideEffects();
-        gameLoop();
-    }
-
-
-    if(pressedKeyInLowerCase == 'd' && prevPressedKeyInLowerCase != 'a') {
+    } else if(pressedKeyInLowerCase == 'd' && currentDirection != DIRECTION_LEFT) {
         // right
         sneakGoRight();
+        currentDirection = DIRECTION_RIGHT;
         changeSneakDirectionSideEffects();
         gameLoop();
-    } else if(pressedKeyInLowerCase == 'd' && prevPressedKeyInLowerCase == 'a') {
+    } else if(pressedKeyInLowerCase == 's' && currentDirection != DIRECTION_UP) {
+        // down
+        sneakGoDown();
+        currentDirection = DIRECTION_DOWN;
+        changeSneakDirectionSideEffects();
+        gameLoop();
+    } else if(currentDirection == DIRECTION_DOWN) {
+        // down
+        sneakGoDown();
+        currentDirection = DIRECTION_DOWN;
+        changeSneakDirectionSideEffects();
+        gameLoop();
+    } else if(currentDirection == DIRECTION_LEFT) {
         // left
         sneakGoLeft();
+        currentDirection = DIRECTION_LEFT;
         changeSneakDirectionSideEffects();
         gameLoop();
-    }
-
-    if(pressedKeyInLowerCase == 's' && prevPressedKeyInLowerCase != 'w') {
-        // down
-        sneakGoDown();
+    } else if(currentDirection == DIRECTION_RIGHT) {
+        // right
+        sneakGoRight();
+        currentDirection = DIRECTION_RIGHT;
         changeSneakDirectionSideEffects();
         gameLoop();
-    } else if(pressedKeyInLowerCase == 's' && prevPressedKeyInLowerCase == 'w') {
+    } else if(currentDirection == DIRECTION_UP) {
         // up
         sneakGoUp();
+        currentDirection = DIRECTION_UP;
         changeSneakDirectionSideEffects();
         gameLoop();
     }
@@ -314,7 +316,6 @@ void readKeywordFromConsole() {
         char tmp = std::tolower((keyword));
 
         if(tmp == 'a' || tmp == 'd' || tmp == 's' || tmp == 'w') {
-            prevPressedKeyInLowerCase = pressedKeyInLowerCase != std::tolower((keyword)) ? pressedKeyInLowerCase : prevPressedKeyInLowerCase;
             pressedKeyInLowerCase = std::tolower((keyword));
         }
     }
